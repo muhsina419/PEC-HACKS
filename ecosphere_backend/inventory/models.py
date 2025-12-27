@@ -35,3 +35,12 @@ class UserAction(models.Model):
     action = models.CharField(max_length=20, choices=ACTION_CHOICES)
     points_awarded = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+class FoodImpact(models.Model):
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    product_name = models.CharField(max_length=255)
+    packaging_type = models.CharField(max_length=100)
+    distance_km = models.FloatField()
+    carbon_kg = models.FloatField()
+    verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
