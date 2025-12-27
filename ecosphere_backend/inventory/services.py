@@ -37,6 +37,8 @@ def calculate_eco_score(product):
         score -= 5
 
     return max(score, 0)
+
+
 def calculate_food_impact(packaging, distance):
     score = 0
 
