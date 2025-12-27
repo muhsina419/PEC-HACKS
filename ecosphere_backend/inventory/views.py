@@ -1,8 +1,18 @@
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from .models import InventoryItem
+# from .serializers import InventorySerializer
+# from datetime import date, timedelta
+# import requests
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from .models import InventoryItem, UserAction
+# from .services import calculate_expiry, calculate_eco_score
+# import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import InventoryItem
-from .serializers import InventorySerializer
-from datetime import date, timedelta
+from .utils import calculate_expiry, calculate_eco_score
 import requests
 
 SHELF_LIFE = {
@@ -138,4 +148,28 @@ def log_user_action(request):
         "message": "Action recorded",
         "points": points,
         "total_impact": f"{points} points added"
+    })
+@api_view(["POST"])
+def eco_food_scan(request):
+    data = request.data
+
+    product = data.get("product")
+    packaging = data.get("packaging")
+    distance = float(data.get("distance", 0))
+
+    carbon = calculate_food_impact(packaging, distance)
+
+    record = FoodImpact.objects.create(
+        user=request.user,
+        product_name=product,
+        packaging_type=packaging,
+        distance_km=distance,
+        carbon_kg=carbon,
+        verified=True
+    )
+
+    return Response({
+        "product": product,
+        "carbon_kg": carbon,
+        "message": "Food impact recorded"
     })
