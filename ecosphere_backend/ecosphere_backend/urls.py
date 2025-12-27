@@ -20,3 +20,10 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+from django.urls import path, include
+
+urlpatterns = [
+    path('api/', include('tracking.urls')),
+    path('api/auth/', include('users.urls')),
+]
