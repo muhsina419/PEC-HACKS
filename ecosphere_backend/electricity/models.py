@@ -20,3 +20,25 @@ class ElectricityBill(models.Model):
     carbon_kg = models.FloatField()
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class HomeEnergyAssessment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    bill = models.ForeignKey(
+        ElectricityBill, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    total_carbon_kg = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class HomeApplianceUsage(models.Model):
+    assessment = models.ForeignKey(
+        HomeEnergyAssessment, related_name="appliances", on_delete=models.CASCADE
+    )
+    appliance_name = models.CharField(max_length=100)
+    wattage = models.FloatField()
+    star_rating = models.PositiveIntegerField()
+    hours_per_day = models.FloatField()
+    carbon_kg = models.FloatField()
+    suggestion = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
