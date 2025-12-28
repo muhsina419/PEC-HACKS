@@ -41,9 +41,15 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'users',
+    'dashboard',
     'tracking',
     'rewards',
-     'inventory',
+    'inventory',
+    'electricity',
+    'food',
+    'travel',
+    'waste',
+    'engagement',
 ]
 
 
@@ -104,42 +110,29 @@ WSGI_APPLICATION = 'ecosphere_backend.wsgi.application'
 # }
 # ...existing code...
 import os
-from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 load_dotenv(BASE_DIR / '.env')
 
 DB_ENGINE = os.getenv('DB_ENGINE', 'django.db.backends.postgresql')
-DB_NAME = os.getenv('DB_NAME', 'insforge')
+DB_NAME = os.getenv('DB_NAME', 'ecosphere')
 DB_USER = os.getenv('DB_USER', 'postgres')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_HOST = os.getenv('DB_HOST', '4hnbz8i9.us-west.database.insforge.app')
 DB_PORT = os.getenv('DB_PORT', '5432')
 DB_SSLMODE = os.getenv('DB_SSLMODE', '')
 
-# Require password for non-sqlite DBs
-if DB_ENGINE != 'django.db.backends.sqlite3' and not DB_PASSWORD:
-    raise ImproperlyConfigured("DB_PASSWORD is not set. Add it to .env or export DB_PASSWORD in your shell.")
-
-if DB_ENGINE == 'django.db.backends.sqlite3':
-    DATABASES = {
-        'default': {
-            'ENGINE': DB_ENGINE,
-            'NAME': BASE_DIR / (DB_NAME or 'db.sqlite3'),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': DB_ENGINE,
+        'NAME': DB_NAME if DB_ENGINE != 'django.db.backends.sqlite3' else BASE_DIR / DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
+        **({'OPTIONS': {'sslmode': DB_SSLMODE}} if DB_SSLMODE else {}),
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': DB_ENGINE,
-            'NAME': DB_NAME,
-            'USER': DB_USER,
-            'PASSWORD': DB_PASSWORD,
-            'HOST': DB_HOST,
-            'PORT': DB_PORT,
-            **({'OPTIONS': {'sslmode': DB_SSLMODE}} if DB_SSLMODE else {}),
-        }
-    }
+}
 # ...existing code...
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
