@@ -22,10 +22,6 @@ urlpatterns = [
     path('api/', include('tracking.urls')),
     path('api/auth/', include('users.urls')),
     path("api/electricity/", include("electricity.urls")),
-    path("api/dashboard/", include("dashboard.urls")),
     path("api/inventory/", include("inventory.urls")),
     path("api/food/", include("food.urls")),
-    path("api/travel/", include("travel.urls")),
-    path("api/waste/", include("waste.urls")),
-    path("api/engagement/", include("engagement.urls")),
 ]

@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+User = get_user_model()
+
 
 User = get_user_model()
 
@@ -29,20 +32,19 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id",
-            "phone_number",
+            "username",
+            "email",
             "first_name",
             "last_name",
-            "email",
             "city",
-            "avatar_url",
             "eco_score",
+            "password",
         ]
-        read_only_fields = ["phone_number", "eco_score"]
+        extra_kwargs = {"password": {"write_only": True}}
 
-
-class PhoneTokenObtainPairSerializer(TokenObtainPairSerializer):
-    username_field = "phone_number"
-
-    def validate(self, attrs):
-        attrs[self.username_field] = attrs.get("phone_number")
-        return super().validate(attrs)
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
