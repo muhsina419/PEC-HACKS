@@ -5,6 +5,7 @@ import { TaskCreate } from "./endpoints/taskCreate";
 import { TaskDelete } from "./endpoints/taskDelete";
 import { TaskFetch } from "./endpoints/taskFetch";
 import { TaskList } from "./endpoints/taskList";
+import { mobileAppPage } from "./frontend/mobile";
 
 // Start a Hono app
 const app = new Hono<{ Bindings: Env }>();
@@ -68,6 +69,9 @@ app.get("/frontend", (c) =>
                 </html>
         `),
 );
+
+// Mobile-style UI that hydrates against the eco feature endpoints
+app.get("/mobile", (c) => c.html(mobileAppPage));
 
 // Export the Hono app
 export default app;
