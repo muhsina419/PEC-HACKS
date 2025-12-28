@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
@@ -37,7 +38,7 @@ class UserAction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class FoodImpact(models.Model):
-    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=255)
     packaging_type = models.CharField(max_length=100)
     distance_km = models.FloatField()
